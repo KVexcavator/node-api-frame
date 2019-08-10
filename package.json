@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/KVexcavator/node-api-frame/issues"
   },
-  "homepage": "https://github.com/KVexcavator/node-api-frame#readme"
+  "homepage": "https://github.com/KVexcavator/node-api-frame#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
