@@ -1,9 +1,7 @@
 const express = require('express');
 const app = express();
-const articles = [{
-  title: 'Example'
-}];
 const bodyParser = require('body-parser');
+const Article = require('./db').Article;
 
 app.set('port', process.env.PORT || 3000);
 
@@ -16,7 +14,10 @@ app.use(bodyParser.urlencoded({
 
 // gets all articles
 app.get('/articles', (req, res, next) => {
-  res.send(articles);
+  Article.all((err, articles) => {
+    if (err) return next(err);
+    res.send(articles);
+  });
 });
 // creates an artocles
 app.post('/articles', (req, res, next) => {
@@ -26,19 +27,22 @@ app.post('/articles', (req, res, next) => {
   articles.push(article);
   res.send(article);
 });
-// gets a single article
+// find a specific article
 app.get('/articles/:id', (req, res, next) => {
   const id = req.params.id;
-  console.log('Fetching:', id);
-  res.send(articles[id]);
+  Article.find(id, (err, article) => {
+    if (err) return next(err);
+    res.send(articles[id]);
+  });
 });
 //delete an article
 app.delete('/articles/:id', (req, res, next) => {
   const id = req.params.id;
-  console.log('Delete:', id);
-  delete articles[id];
-  res.send({
-    message: 'Deleted!'
+  Article.delete(id, (err) => {
+    if (err) return next(err);
+    res.send({
+      message: 'Delete'
+    });
   });
 });
 
