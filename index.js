@@ -2,6 +2,9 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const Article = require('./db').Article;
+/*provides an asynchronous function that downloads a URL
+ and turns the HTML into a simplified representation*/
+const read = require('node-readability');
 
 app.set('port', process.env.PORT || 3000);
 
@@ -21,11 +24,22 @@ app.get('/articles', (req, res, next) => {
 });
 // creates an artocles
 app.post('/articles', (req, res, next) => {
-  const article = {
-    title: req.body.title
-  };
-  articles.push(article);
-  res.send(article);
+  //gets the URL from the POST body
+  const url = req.body.url;
+  // uses the readability mode to fetch the URL
+  read(url, (err, result) => {
+    if (err || !result) res.status(500).send('Error downloading aeticle');
+    Article.create({
+        title: result.title,
+        content: result.content
+      },
+      (err, article) => {
+        if (err) return next(err);
+        // arter saving the article, sends back a 200
+        res.send('OK');
+      }
+    );
+  });
 });
 // find a specific article
 app.get('/articles/:id', (req, res, next) => {
