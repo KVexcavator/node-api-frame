@@ -14,6 +14,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+//load Bootstrap
+app.use(
+  '/css/bootstrap.css',
+  express.static('node_modules/bootstrap/dist/css/bootstrap.css')
+);
 
 // gets all articles
 app.get('/articles', (req, res, next) => {
